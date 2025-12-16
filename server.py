@@ -2,15 +2,17 @@ import socketio
 from fastapi import FastAPI
 import uvicorn
 
-# --- CONFIGURATION CHANGES HERE ---
+# Initialize Server with high limits
 sio = socketio.AsyncServer(
     async_mode='asgi',
     cors_allowed_origins='*',
-    # Increase buffer to 50MB (prevents crash on large video frames)
-    max_http_buffer_size=50 * 1024 * 1024, 
-    # Increase packet limit (prevents crash when audio chunks pile up)
-    # 500 allows ~10 seconds of audio buffering without crashing
-    max_decode_packets=500 
+    # Allow massive payloads (50MB) for video
+    max_http_buffer_size=50 * 1024 * 1024,
+    # Allow 1000 packets per batch (just in case polling is still used)
+    max_decode_packets=1000,
+    # Keep connection alive longer
+    ping_timeout=60,
+    ping_interval=25
 )
 
 app = FastAPI()
