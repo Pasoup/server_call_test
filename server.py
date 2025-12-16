@@ -1,8 +1,18 @@
 import socketio
 from fastapi import FastAPI
+import uvicorn
 
-# Create a Socket.IO server (Asynchronous)
-sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
+# --- CONFIGURATION CHANGES HERE ---
+sio = socketio.AsyncServer(
+    async_mode='asgi',
+    cors_allowed_origins='*',
+    # Increase buffer to 50MB (prevents crash on large video frames)
+    max_http_buffer_size=50 * 1024 * 1024, 
+    # Increase packet limit (prevents crash when audio chunks pile up)
+    # 500 allows ~10 seconds of audio buffering without crashing
+    max_decode_packets=500 
+)
+
 app = FastAPI()
 sio_app = socketio.ASGIApp(sio, app)
 
