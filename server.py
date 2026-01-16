@@ -15,7 +15,7 @@ def home():
 async def connect(sid, environ):
     print(f"✅ User Connected: {sid}")
     # Force everyone into the same global room automatically
-    sio.enter_room(sid, "global_room")
+    await sio.enter_room(sid, "global_room")
     await sio.emit('status', {'msg': 'New User Connected!'}, room="global_room", skip_sid=sid)
 
 @sio.event
