@@ -48,8 +48,8 @@ async def send_audio(sid, data):
     """Relay audio from Sender to everyone else in the room"""
     room = data['room']
     audio = data['audio']
-    await sio.emit('receive_audio', {'audio': audio}, room=room, skip_sid=sid)
-
+    await sio.emit('receive_audio', {'audio': audio}, room=room)
 @sio.event
 async def disconnect(sid):
     print(f"User Disconnected: {sid}")
+
